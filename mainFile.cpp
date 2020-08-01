@@ -4,98 +4,93 @@
 #include <memory>
 #include <cstring>
 #include <map>
-#include "./bst.h"
+#include <algorithm>
+#include "./binarySearchTree.h"
 
-std::fstream openFile() {
-
-    /* Apertura o creazione di un file */
-    std::fstream file;
-
-        file.open("Prova.txt", std::ios::in | std::ios::out);
-    if(file.fail()) {
-        std::cout << "File non trovato\nCreazione di un nuovo file...\n";
-        file.open("Prova.txt", std::ios::in | std::ios::out | std::ios::app);
-        if(file.fail()) {
-            std::cout << "Errore nella creazione del file\n";
-        } else {
-            std::cout << "File creato correttamente\n";
-        }
-    } else {
-        std::cout << "File aperto correttamente\n";
-    }
-
-    return file;
-}
-
+/* Find duplicates in a word for the permutation formula */
 int findDuplicates(std::string word) {
     int numberOfDubplicates = 0;
     int strLen = word.length();
-    std::map<char, int> map;
+    std::map<char, int> map;    /* Store word's letter in a map */
 
     for(int i=0; i<strLen; i++) {
-        map[word[i]] += 1;
+        map[word[i]] += 1;  /* If there are duplicates some words will result higher than 1 */
     }
 
     for(auto element : map) {
         if(element.second > 1) {
-            numberOfDubplicates += element.second;
+            numberOfDubplicates += element.second;  /* Increment the sum of duplicates */
         }
     }
 
     return numberOfDubplicates;
 }
 
-int findFactorial(int number, int result) {
+/* Factorial number function */
+int findFactorial(int number, int result) {     /* Calculate factorial number for the permutation formula with recursion*/
     return (number == 0) ? result : findFactorial(number-1, result*number);
 }
 
+/* Create anagrams and search them in the BST */
 void customSearch(std::string word, std::shared_ptr<BST> bst) {
     std::vector<std::string> anagramsArray;
     int nDuplicates;
-    int wordLen = word.length();
-    std::string tempWord;
-    nDuplicates = findDuplicates(word);
+    int wordLen = word.length();    /*Get word length */
+    std::string tempWord = word;
+    nDuplicates = findDuplicates(word);     /* Get number of duplicates */
 
-    std::cout << "Number of possible anagrams: " << (findFactorial(wordLen,1)/findFactorial(nDuplicates, 1)) << "\n";
+    /* Print number of possible anagrams with duplicates permutation formula */
+    std::cout << "\nNumber of possible anagrams: " << (findFactorial(wordLen,1)/findFactorial(nDuplicates, 1)) << "\n";
 
     std::cout << "Making anagrams...\n";
-    for(char c1 : word) {
-        for(char c2 : word) {
-            //Make anagrams
-        }
+    std::sort(tempWord.begin(), tempWord.end());    /* Sort the word */
+    anagramsArray.emplace_back(tempWord);
+
+    while(std::next_permutation(tempWord.begin(), tempWord.end())) {    /* Create permutation with algorithm.h funcion */
+        anagramsArray.emplace_back(tempWord);
     }
 
-
-    std::cout << "Searching";
-    //bst->search(word, bst->root);
+    std::cout << "Searching...\n";
+    for(auto wordOfArray : anagramsArray) {
+        bst->search(wordOfArray, bst->root);    //Search data in the BST
+    }
 }
 
 int main() {
 
-	std::fstream file = openFile();
+    std::fstream file;
     std::string output;
     std::string word;
 
-    {   /* Start unique pointer */
-        std::shared_ptr<BST> bst(new BST);
+    file.open("Prova.txt", std::ios::in | std::ios::out);   /* Try to open the file */
+    if(file.fail()) {   /* Check for errors */
+        std::cout << "Errore nell'apertura del file, file non trovato o corrotto...";
+        return 1;
+    }else {
+        std::cout << "File aperto correttamente\n";
+    }
 
-        /* Lettura e output del file */
+
+    {   /* Start shared pointer */
+        std::shared_ptr<BST> bst(new BST);  /* BST is the binary search tree class */
+
+        /* Lettura del file e inserimento dei dati nel binary search tree*/
         while(file >> output) {
             bst->insertData(output, bst->root);
         }
 
-        while(true) {
-            std::cout << "Insert the word: ";
+        while(true) {   /* Program loop */
+            std::cout << "--------------------\n";
+            std::cout << "Inserisci una parola: ";
             std::cin >> word;
-            if(word == "exit") {
+            if(word == "exit") {    /* Check for break */
                 break;
             } else {
-                customSearch(word, bst);
+                customSearch(word, bst);    /* Create anagrams of the word and search them in the BST */
             }
         }
-        //bst->getData(bst->root);
 
-    }   /*End unique pointer*/
+    }   /*End shared pointer*/
 
 	return 0;
 }

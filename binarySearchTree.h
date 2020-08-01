@@ -4,7 +4,7 @@
 /* Binary Search Tree class */
 class BST {
 private:
-    struct Node {
+    struct Node {   /* Node struct */
         std::string data;
         Node* right = nullptr;
         Node* left = nullptr;
@@ -20,6 +20,7 @@ public:
     void search(std::string, Node*);
 };
 
+/* Create new node */
 BST::Node* BST::createNode(std::string value) {
     struct Node* newNode = new Node;
     newNode->data = value;
@@ -27,6 +28,7 @@ BST::Node* BST::createNode(std::string value) {
     return newNode;
 }
 
+/* Insert data in the BST with recursion */
 BST::Node* BST::insertData(std::string value, Node* node) {
     if(!node) {
         node = createNode(value);
@@ -42,16 +44,20 @@ BST::Node* BST::insertData(std::string value, Node* node) {
     return node;
 }
 
+/* Search a word in the BST with recursion */
 void BST::search(std::string value, Node* node) {
-    if(value.compare(node->data) < 0) {
+    if(!node) {
+        return;
+    } else if(value.compare(node->data) < 0) {
         search(value, node->left);
     } else if(value.compare(node->data) > 0) {
         search(value, node->right);
-    } else if(value.compare(node->data) == 0) {
-        std::cout << "\nWord searched: " << value << "\n" << "Word found: " << node->data;
+    } else if(value == node->data) {
+        std::cout << "\nWord searched: " << value << "\n" << "Word found: " << node->data  << "\n";
     }
 }
 
+/* Output all data with recursion */
 void BST::getData(Node* node) {
     if(node) {
         getData(node->left);
