@@ -62,7 +62,7 @@ int main() {
     std::string output;
     std::string word;
 
-    file.open("Prova.txt", std::ios::in | std::ios::out);   /* Try to open the file */
+    file.open("../wordList.txt", std::ios::in | std::ios::out);   /* Try to open the file */
     if(file.fail()) {   /* Check for errors */
         std::cout << "Errore nell'apertura del file, file non trovato o corrotto...";
         return 1;
@@ -70,27 +70,31 @@ int main() {
         std::cout << "File aperto correttamente\n";
     }
 
-
-    {   /* Start shared pointer */
-        std::shared_ptr<BST> bst(new BST);  /* BST is the binary search tree class */
+        std::cout << "--------------------\n";
+        std::cout << "Inserisci una parola: ";
+        std::cin >> word;
+        if (word=="exit") {    /* Check for break */
+            return 0;
+        }
 
         /* Lettura del file e inserimento dei dati nel binary search tree*/
-        while(file >> output) {
-            bst->insertData(output, bst->root);
-        }
+        while(file) {
+            {   /* Start shared pointer */
+            std::shared_ptr<BST> bst(new BST);  /* BST is the binary search tree class */
 
-        while(true) {   /* Program loop */
-            std::cout << "--------------------\n";
-            std::cout << "Inserisci una parola: ";
-            std::cin >> word;
-            if(word == "exit") {    /* Check for break */
-                break;
-            } else {
-                customSearch(word, bst);    /* Create anagrams of the word and search them in the BST */
+            constexpr size_t bufferSizeLimit = 1024 * 64;
+            size_t bufferSize = 0;
+
+            while (file >> output && bufferSize < bufferSizeLimit) {
+                bst->insertData(output, bst->root);
+                bufferSize += sizeof(output);
             }
-        }
 
-    }   /*End shared pointer*/
+            std::cout << "\nCustom search\n";
+            customSearch(word, bst);    /* Create anagrams of the word and search them in the BST */
+
+        }   /*End shared pointer*/
+    }
 
 	return 0;
 }

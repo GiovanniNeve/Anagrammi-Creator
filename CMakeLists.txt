@@ -1,7 +1,14 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
+cmake_minimum_required(VERSION 3.17)
+project(Anagrammi_Creator)
 
+set(CMAKE_CXX_STANDARD 14)
 
+include_directories(.)
 
-project(anagrammi_bst)
+add_executable(Anagrammi_Creator
+        binarySearchTree.h
+        CMakeLists.txt
+        mainFile.cpp)
 
-add_executable(anagrammi_bst mainFile.cpp binarySearchTree.h)
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")

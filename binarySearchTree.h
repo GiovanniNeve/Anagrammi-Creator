@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <utility>
 
 /* Binary Search Tree class */
 class BST {
@@ -22,8 +23,8 @@ public:
 
 /* Create new node */
 BST::Node* BST::createNode(std::string value) {
-    struct Node* newNode = new Node;
-    newNode->data = value;
+    Node* newNode = new Node;
+    newNode->data = std::move(value);
 
     return newNode;
 }
