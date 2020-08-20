@@ -32,12 +32,11 @@ int findFactorial(int number, int result) {     /* Calculate factorial number fo
 }
 
 /* Create anagrams and search them in the BST */
-void customSearch(std::string word, std::shared_ptr<BST> bst) {
+std::vector<std::string> makeAnagrams(std::string word) {
     std::vector<std::string> anagramsArray;
-    int nDuplicates;
-    int wordLen = word.length();    /*Get word length */
     std::string tempWord = word;
-    nDuplicates = findDuplicates(word);     /* Get number of duplicates */
+    int wordLen = word.length();    /*Get word length */
+    int nDuplicates = findDuplicates(word);     /* Get number of duplicates */
 
     /* Print number of possible anagrams with duplicates permutation formula */
     std::cout << "\nNumber of possible anagrams: " << (findFactorial(wordLen,1)/findFactorial(nDuplicates, 1)) << "\n";
@@ -50,8 +49,13 @@ void customSearch(std::string word, std::shared_ptr<BST> bst) {
         anagramsArray.emplace_back(tempWord);
     }
 
+    return anagramsArray;
+}
+
+void search(std::vector<std::string> anagramsArray, std::shared_ptr<BST> bst)
+{
     std::cout << "Searching...\n";
-    for(auto wordOfArray : anagramsArray) {
+    for (auto wordOfArray : anagramsArray) {
         bst->search(wordOfArray, bst->root);    //Search data in the BST
     }
 }
@@ -61,6 +65,7 @@ int main() {
     std::fstream file;
     std::string output;
     std::string word;
+    std::vector<std::string> arrayOfAnagrams;
 
     file.open("../wordList.txt", std::ios::in | std::ios::out);   /* Try to open the file */
     if(file.fail()) {   /* Check for errors */
@@ -77,12 +82,14 @@ int main() {
             return 0;
         }
 
+        arrayOfAnagrams = makeAnagrams(word);
+
         /* Lettura del file e inserimento dei dati nel binary search tree*/
         while(file) {
             {   /* Start shared pointer */
             std::shared_ptr<BST> bst(new BST);  /* BST is the binary search tree class */
 
-            constexpr size_t bufferSizeLimit = 1024 * 64;
+            constexpr size_t bufferSizeLimit = 1024 * 128;
             size_t bufferSize = 0;
 
             while (file >> output && bufferSize < bufferSizeLimit) {
@@ -90,8 +97,7 @@ int main() {
                 bufferSize += sizeof(output);
             }
 
-            std::cout << "\nCustom search\n";
-            customSearch(word, bst);    /* Create anagrams of the word and search them in the BST */
+            search(arrayOfAnagrams, bst);
 
         }   /*End shared pointer*/
     }
