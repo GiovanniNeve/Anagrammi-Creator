@@ -13,6 +13,7 @@ int main() {
     std::string fileOutput;
     std::string word;
     std::vector<std::string> arrayOfAnagrams;
+    std::vector<std::string> foundAnagrams;
     int fileLength;
 
     file.open("../wordList.txt", std::ios::in | std::ios::out);   // Try to open the file
@@ -40,7 +41,7 @@ int main() {
     // Read the file 131 KB at once (around 11 hundred words at once)
     while(file) {
         int fileIteratorPosition = file.tellg();    // Get iterator position for percentage
-        std::cout << "\n" << (fileIteratorPosition*100)/fileLength << "%";  // Calculate and print percentage
+        std::cout << std::endl << (fileIteratorPosition*100)/fileLength << "%";  // Calculate and print percentage
         {   // Start shared pointer
         // Create a vector pointer
         std::shared_ptr<std::vector<std::string>> dataArray(new std::vector<std::string>);
@@ -55,9 +56,14 @@ int main() {
         }
 
         // Search word in the vector
-        search(arrayOfAnagrams, dataArray);
+        auto tempAnagrams = search(arrayOfAnagrams, dataArray);
+        foundAnagrams.insert(foundAnagrams.end(), tempAnagrams.begin(), tempAnagrams.end());
 
         }   //End shared pointer
+    }
+    std::cout << "\n\nAnagrams found:";
+    for(auto element : foundAnagrams) {
+        std::cout << std::endl << element;
     }
 
 	return 0;

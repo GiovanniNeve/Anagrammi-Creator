@@ -51,15 +51,17 @@ std::vector<std::string> makeAnagrams(std::string word) {
 }
 
 // Search the word inserted in the dictionary
-void search(std::vector<std::string> anagramsArray, std::shared_ptr<std::vector<std::string>> dataArray) {
+std::vector<std::string> search(std::vector<std::string> anagramsArray, std::shared_ptr<std::vector<std::string>> dataArray) {
+    std::vector<std::string> anagramsFound;
     for(auto word : *dataArray) {
-        for (auto wordOfArray : anagramsArray) {
+        for (auto anagram : anagramsArray) {
             // If the first letter of the inserted word is ahead it will skip all of them
-            if (wordOfArray[0] < word[0]) {
+            if (anagram[0] < word[0]) {
                 continue;
-            } else if(word.compare(wordOfArray) == 0) {     // If the words are the same it prints it out
-                std::cout << "\nWord found " << word<< "\n";
+            } else if(word.compare(anagram) == 0) {     // If the words are the same it prints it out
+                anagramsFound.emplace_back(anagram);
             }
         }
     }
+    return anagramsFound;
 }
