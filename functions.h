@@ -41,10 +41,11 @@ std::vector<std::string> makeAnagrams(std::string word) {
 
     std::cout << "Making anagrams...\n";
     std::sort(tempWord.begin(), tempWord.end());    // Sort the letter of the word
-    anagramsArray.emplace_back(tempWord);   // Insert the first word as an anagram
+    anagramsArray.emplace_back(tempWord);   // Insert the first permutation as an anagram
 
     while(std::next_permutation(tempWord.begin(), tempWord.end())) {    // Create permutation with next_permutation formula
-        anagramsArray.emplace_back(tempWord);   // Insert the other anagrams
+        if(tempWord != word)
+            anagramsArray.emplace_back(tempWord);   // Insert the other anagrams
     }
 
     return anagramsArray;
