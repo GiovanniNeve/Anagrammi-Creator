@@ -74,7 +74,7 @@ int main() {
         arrayOfAnagrams.clear();
 
         char choose;
-        std::cout << "\nRedo? (y/n): ";
+        std::cout << "\n\nRedo? (y/n): ";
         std::cin >> choose;
         if (choose=='n' || choose=='N')
             break;
